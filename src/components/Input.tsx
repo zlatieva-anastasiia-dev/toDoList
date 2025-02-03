@@ -2,11 +2,12 @@ import { type InputHTMLAttributes } from "react";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
-export default function Input({
+export function Input({
   id,
   value,
   onChange,
   type = "text",
+  checked,
   className,
 }: InputProps) {
   return (
@@ -16,6 +17,7 @@ export default function Input({
       value={value}
       onChange={onChange}
       className={className}
+      checked={checked}
     />
   );
 }

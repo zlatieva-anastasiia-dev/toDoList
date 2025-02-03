@@ -1,22 +1,27 @@
 import { type ToDoItem } from "../../App";
-import Button from "../../components/Button";
-import Checkbox from "../../components/Checkbox";
-import Label from "../../components/Label";
-import { useToDoList } from "./hooks/useToDoList";
+import { Button } from "../../components/Button";
+import { Checkbox } from "../../components/Checkbox";
+import { Label } from "../../components/Label";
+
 type Props = {
   toDoItem: ToDoItem;
+  handleToggleTodo: (id: string) => void;
+  handleRemoveTodo: (id: string) => void;
 };
 
-export default function ToDoItemInput({ toDoItem }: Props) {
-  const { handleRemoveTodo, handleToggleToDo } = useToDoList();
+export default function ToDoItemInput({
+  toDoItem,
+  handleToggleTodo,
+  handleRemoveTodo,
+}: Props) {
   return (
-    <li key={toDoItem.id}>
+    <li>
       <Checkbox
-        value={toDoItem.value}
         id={toDoItem.id}
-        onChange={() => handleToggleToDo(toDoItem.id)}
+        checked={toDoItem.isCompleted}
+        onChange={() => handleToggleTodo(toDoItem.id)}
       />
-      <Label htmlFor={toDoItem.id.toString()}>{toDoItem.value}</Label>
+      <Label htmlFor={toDoItem.id}>{toDoItem.value}</Label>
       <Button onClick={() => handleRemoveTodo(toDoItem.id)}>Remove Task</Button>
     </li>
   );

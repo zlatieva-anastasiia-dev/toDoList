@@ -16,7 +16,7 @@ export function useToDoList() {
     setTodoItems((prevToDoItems) =>
       prevToDoItems.map((todoItem) =>
         todoItem.id === todoId
-          ? { ...todoItem, completed: !todoItem.isCompleted }
+          ? { ...todoItem, isCompleted: !todoItem.isCompleted }
           : todoItem
       )
     );

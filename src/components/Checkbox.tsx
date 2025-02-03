@@ -1,9 +1,10 @@
-import Input, { type InputProps } from "./Input";
+import { type InputProps, Input } from "./Input";
 type CheckboxProps = InputProps;
-export default function Checkbox({
+export function Checkbox({
   id,
   value,
   onChange,
+  checked,
   className,
 }: CheckboxProps) {
   return (
@@ -13,6 +14,7 @@ export default function Checkbox({
       onChange={onChange}
       type="checkbox"
       className={className}
+      checked={checked}
     />
   );
 }

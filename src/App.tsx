@@ -1,95 +1,129 @@
-import { useMemo, useState } from "react";
-import ToDoItemsList from "./features/ToDo/ToDoItemsList";
+import { useState } from "react";
+
 import { Input } from "./components/Input";
 import { Label } from "./components/Label";
 import { Box } from "./components/Box";
 
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
-import { useToDoList } from "./features/ToDo/hooks/useToDoList";
-import { Select } from "./components/Select";
+
+import { DndContext } from "@dnd-kit/core";
+import { Droppable } from "./Droppable";
+import { Draggable } from "./Draggable";
+import { Card } from "./components/Card";
+import TaskColumn from "./features/ToDo/TaskColumn";
 
 export type ToDoItem = {
   id: string;
-  value: string;
-  isCompleted: boolean;
+  name: string;
+  parentId: string;
 };
 
-const options = [
-  { value: "all", label: "All tasks" },
-  { value: "completed", label: "Completed tasks" },
-  { value: "incomplete", label: "Non completed task" },
-  { value: "sortByCompleted", label: "Sorted tasks by completed" },
+const columns = [
+  {
+    id: "1",
+    title: "To do",
+  },
+  { id: "2", title: "In progress" },
+  { id: "3", title: "Done" },
 ];
 
 function App() {
   const [newTask, setNewTask] = useState<string>("");
-  const [filter, setFilter] = useState("all");
-  const { handleAddTodo, handleRemoveTodo, handleToggleToDo, todoItems } =
-    useToDoList();
+  const [elementsToDrag, setElementsToDrag] = useState<Array<ToDoItem>>([]);
 
-  const filteredTodos = useMemo(() => {
-    switch (filter) {
-      case "all":
-        return todoItems;
-      case "completed":
-        return todoItems.filter((item) => item.isCompleted);
-      case "incomplete":
-        return todoItems.filter((item) => !item.isCompleted);
-      case "sortByCompleted":
-        return todoItems.sort((a, b) => {
-          if (a.isCompleted && !b.isCompleted) {
-            return -1;
-          } else if (!a.isCompleted && b.isCompleted) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-      default:
-        return todoItems;
-    }
-  }, [todoItems, filter]);
+  const handleAddTodo = (newTask: string) => {
+    const newTodo = {
+      id: crypto.randomUUID(),
+      name: newTask,
+      parentId: "1",
+    };
+
+    setElementsToDrag([...elementsToDrag, newTodo]);
+  };
 
   const handleAddNewTodo = () => {
     handleAddTodo(newTask);
     setNewTask("");
   };
 
+  const handleDragEnd = (event: any) => {
+    const { over, active } = event;
+
+    console.log(event);
+    if (over && active) {
+      setElementsToDrag((prevElements) =>
+        prevElements.map((element) => {
+          if (element.id === active.id) {
+            return { ...element, parentId: over.id };
+          }
+          return element;
+        })
+      );
+    }
+  };
+
   return (
     <Box className="main">
       <Box className="mainHeader">
-        <Heading>To do List</Heading>
+        <Heading>Awesome Drag and Drop To do List</Heading>
       </Box>
       <Box className="todoInputField">
         <Box className="todoInput">
+          <Label htmlFor="newTodo">Let's add to do</Label>
           <Input
             id="newTodo"
             value={newTask}
+            placeholder="Type to do"
             onChange={(e) => {
               setNewTask(e.target.value);
             }}
           />
-          <Label htmlFor="newTodo">Type to do</Label>
         </Box>
         <Button className="todoButton" onClick={handleAddNewTodo}>
           Add todo
         </Button>
       </Box>
-      <Box className="todoList">
-        <Box>
-          <Heading as="h2">To Do</Heading>
-          <Select
-            onChange={(e) => setFilter(e.target.value)}
-            options={options}
-          />
+      <DndContext onDragEnd={handleDragEnd}>
+        <Box style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+          {elementsToDrag.map((item) => {
+            if (item.parentId !== "") {
+              return null;
+            }
+            return (
+              <Draggable id={item.id} key={item.id}>
+                {item.name}
+              </Draggable>
+            );
+          })}
         </Box>
-        <ToDoItemsList
-          handleRemoveTodo={handleRemoveTodo}
-          handleToggleTodo={handleToggleToDo}
-          toDoItems={filteredTodos}
-        />
-      </Box>
+        <Box style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
+          {columns.map((column) => (
+            <Droppable key={column.id} id={column.id}>
+              <TaskColumn column={column}>
+                <Box
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
+                  {elementsToDrag.map((item) => {
+                    if (item.parentId === column.id) {
+                      return (
+                        <Draggable key={item.id} id={item.id}>
+                          <Card>{item.name}</Card>
+                        </Draggable>
+                      );
+                    }
+                    return null;
+                  })}
+                </Box>
+              </TaskColumn>
+            </Droppable>
+          ))}
+        </Box>
+      </DndContext>
     </Box>
   );
 }

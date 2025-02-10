@@ -8,6 +8,7 @@ export function Input({
   onChange,
   type = "text",
   checked,
+  placeholder,
   className,
 }: InputProps) {
   return (
@@ -18,6 +19,7 @@ export function Input({
       onChange={onChange}
       className={className}
       checked={checked}
+      placeholder={placeholder}
     />
   );
 }

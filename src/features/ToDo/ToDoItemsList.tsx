@@ -1,27 +1,22 @@
 import { type ToDoItem } from "../../App";
+import { Draggable } from "../../Draggable";
+import { Droppable } from "../../Droppable";
+
 import ToDoItemInput from "./ToDoItem";
 
 type Props = {
   toDoItems: ToDoItem[];
-  handleToggleTodo: (id: string) => void;
-  handleRemoveTodo: (id: string) => void;
+  id?: string;
 };
 
-export default function ToDoItemsList({
-  handleToggleTodo,
-  handleRemoveTodo,
-  toDoItems,
-}: Props) {
+export function ToDoItemsList({ id, toDoItems }: Props) {
   return (
-    <ul style={{ listStyle: "none" }}>
+    <Droppable id={id}>
       {toDoItems.map((toDoItem) => (
-        <ToDoItemInput
-          key={toDoItem.id}
-          toDoItem={toDoItem}
-          handleToggleTodo={handleToggleTodo}
-          handleRemoveTodo={handleRemoveTodo}
-        />
+        <Draggable key={toDoItem.id} id={toDoItem.id}>
+          <ToDoItemInput toDoItem={toDoItem} />
+        </Draggable>
       ))}
-    </ul>
+    </Droppable>
   );
 }

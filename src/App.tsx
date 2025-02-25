@@ -7,60 +7,52 @@ import { Box } from "./components/Box";
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
 
-import { DndContext } from "@dnd-kit/core";
-import { Droppable } from "./Droppable";
-import { Draggable } from "./Draggable";
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+
 import { Card } from "./components/Card";
-import TaskColumn from "./features/ToDo/TaskColumn";
+
+import { Container } from "./features/dragAndDrop/Container";
+
+import { useDragAndDrop } from "./features/dragAndDrop/hooks/useDragAndDrop";
 
 export type ToDoItem = {
   id: string;
   name: string;
-  parentId: string;
 };
-
-const columns = [
-  {
-    id: "1",
-    title: "To do",
-  },
-  { id: "2", title: "In progress" },
-  { id: "3", title: "Done" },
-];
 
 function App() {
   const [newTask, setNewTask] = useState<string>("");
-  const [elementsToDrag, setElementsToDrag] = useState<Array<ToDoItem>>([]);
 
-  const handleAddTodo = (newTask: string) => {
-    const newTodo = {
+  const {
+    items,
+    activeItem,
+    setItems,
+    handleDragEnd,
+    handleDragOver,
+    handleDragStart,
+  } = useDragAndDrop();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
+
+  const handleAddTodo = () => {
+    const newTodo: ToDoItem = {
       id: crypto.randomUUID(),
       name: newTask,
-      parentId: "1",
     };
-
-    setElementsToDrag([...elementsToDrag, newTodo]);
-  };
-
-  const handleAddNewTodo = () => {
-    handleAddTodo(newTask);
+    setItems((prev) => {
+      return { ...prev, toDo: [...prev["toDo"], newTodo] };
+    });
     setNewTask("");
-  };
-
-  const handleDragEnd = (event: any) => {
-    const { over, active } = event;
-
-    console.log(event);
-    if (over && active) {
-      setElementsToDrag((prevElements) =>
-        prevElements.map((element) => {
-          if (element.id === active.id) {
-            return { ...element, parentId: over.id };
-          }
-          return element;
-        })
-      );
-    }
   };
 
   return (
@@ -80,49 +72,33 @@ function App() {
             }}
           />
         </Box>
-        <Button className="todoButton" onClick={handleAddNewTodo}>
+        <Button className="todoButton" onClick={handleAddTodo}>
           Add todo
         </Button>
       </Box>
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        sensors={sensors}
+      >
         <Box style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
-          {elementsToDrag.map((item) => {
-            if (item.parentId !== "") {
-              return null;
-            }
-            return (
-              <Draggable id={item.id} key={item.id}>
-                {item.name}
-              </Draggable>
-            );
-          })}
+          <Container
+            items={items.toDo}
+            column={{ id: "toDo", title: "To do" }}
+          />
+          <Container
+            items={items.inProgress}
+            column={{ id: "inProgress", title: "In Progress" }}
+          />
+          <Container
+            items={items.done}
+            column={{ id: "done", title: "Done" }}
+          />
         </Box>
-        <Box style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
-          {columns.map((column) => (
-            <Droppable key={column.id} id={column.id}>
-              <TaskColumn column={column}>
-                <Box
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                  }}
-                >
-                  {elementsToDrag.map((item) => {
-                    if (item.parentId === column.id) {
-                      return (
-                        <Draggable key={item.id} id={item.id}>
-                          <Card>{item.name}</Card>
-                        </Draggable>
-                      );
-                    }
-                    return null;
-                  })}
-                </Box>
-              </TaskColumn>
-            </Droppable>
-          ))}
-        </Box>
+        <DragOverlay>
+          {activeItem ? <Card>{activeItem.name}</Card> : null}
+        </DragOverlay>
       </DndContext>
     </Box>
   );

@@ -1,11 +1,9 @@
-import { ReactNode } from "react";
+import { HTMLAttributes } from "react";
 
-type HeaderProps = {
-  children: ReactNode;
-  className?: string;
+type HeaderProps = HTMLAttributes<HTMLHeadingElement> & {
   as?: "h1" | "h2" | "h3";
 };
-export function Heading({ as, children, className }: HeaderProps) {
-  const Heading = as || "h1";
-  return <Heading className={className}>{children}</Heading>;
+export function Heading(props: HeaderProps) {
+  const Heading = props.as || "h1";
+  return <Heading {...props}>{props.children}</Heading>;
 }

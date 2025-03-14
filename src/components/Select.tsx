@@ -8,10 +8,10 @@ type Option = {
 type SelectProps = {
   options: Array<Option>;
 } & SelectHTMLAttributes<HTMLSelectElement>;
-export function Select({ options, onChange }: SelectProps) {
+export function Select(props: SelectProps) {
   return (
-    <select onChange={onChange}>
-      {options.map((option, index) => {
+    <select {...props}>
+      {props.options.map((option, index) => {
         return (
           <option key={index} value={option.value}>
             {option.label}

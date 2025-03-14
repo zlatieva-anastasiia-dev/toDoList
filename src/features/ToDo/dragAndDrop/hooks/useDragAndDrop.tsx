@@ -1,21 +1,30 @@
 import {
   DragOverEvent,
   DragStartEvent,
+  PointerSensor,
+  KeyboardSensor,
   UniqueIdentifier,
+  useSensor,
+  useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
-import { ToDoItem } from "../../../App";
-import { useMemo, useState } from "react";
+
+import { SetStateAction, useState, Dispatch } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
+import { ToDoItem } from "../../types";
 
-export const useDragAndDrop = () => {
-  const [items, setItems] = useState<Record<string, Array<ToDoItem>>>({
-    toDo: [],
-    inProgress: [],
-    done: [],
-  });
+type Props = {
+  items: Record<string, Array<ToDoItem>>;
+  setItems: Dispatch<SetStateAction<Record<string, ToDoItem[]>>>;
+};
 
+export const useDragAndDrop = ({ items, setItems }: Props) => {
   const [activeItem, setActiveItem] = useState<ToDoItem | undefined>(undefined);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
 
   const findContainerByItemId = (id: UniqueIdentifier) => {
     return Object.keys(items).find((key) =>
@@ -124,6 +133,7 @@ export const useDragAndDrop = () => {
     items,
     setItems,
     activeItem,
+    sensors,
     handleDragEnd,
     handleDragOver,
     handleDragStart,

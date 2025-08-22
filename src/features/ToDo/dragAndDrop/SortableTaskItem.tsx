@@ -24,8 +24,8 @@ export function SortableTaskItem({ id, children, handleDelete }: Props) {
     opacity: isDragging ? 0.4 : undefined,
     transform: CSS.Transform.toString(transform),
     transition,
+    touchAction: "none",
   };
-  console.log(attributes);
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} key={id}>

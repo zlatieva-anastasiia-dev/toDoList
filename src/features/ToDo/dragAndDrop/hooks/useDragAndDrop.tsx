@@ -1,9 +1,10 @@
 import {
   DragOverEvent,
   DragStartEvent,
-  PointerSensor,
   KeyboardSensor,
   UniqueIdentifier,
+  TouchSensor,
+  MouseSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -22,8 +23,9 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
   const [activeItem, setActiveItem] = useState<ToDoItem | undefined>(undefined);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor)
+    useSensor(MouseSensor),
+    useSensor(KeyboardSensor),
+    useSensor(TouchSensor)
   );
 
   const findContainerByItemId = (id: UniqueIdentifier) => {

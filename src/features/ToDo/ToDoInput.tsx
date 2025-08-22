@@ -23,7 +23,7 @@ export function ToDoInput({ handleAddTodo }: Props) {
           onChange={(e) => {
             setNewTask(e.target.value);
           }}
-          className="rounded-lg px-2.5 pb-2.5 pt-5 w-full text-sm text--900 bg-gray-50 dark:bg-gray-800 border-2 border-gray-700 appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-space-900 peer "
+          className="rounded-lg px-2.5 pb-2.5 pt-5 w-full text-base text--900 bg-gray-50 dark:bg-gray-800 border-2 border-gray-700 appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-space-900 peer "
         />
         <Label
           htmlFor="newTodo"

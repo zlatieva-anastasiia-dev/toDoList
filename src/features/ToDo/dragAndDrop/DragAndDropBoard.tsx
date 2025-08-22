@@ -29,7 +29,7 @@ export function DragAndDropBoard({ items, setItems, handleDeleteTodo }: Props) {
         onDragOver={handleDragOver}
         sensors={sensors}
       >
-        <div className="flex row gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <SortableTaskColumn
             items={items.toDo}
             column={{ id: "toDo", title: "To do" }}

@@ -16,7 +16,7 @@ export function ThemeProvider({ children }: Props) {
   const [theme, setTheme] = useState<"light" | "dark">(
     localStorage.getItem("theme") as "light" | "dark"
   );
-  console.log({ theme });
+
   useEffect(() => {
     localStorage.setItem("theme", theme);
     if (theme === "dark") {

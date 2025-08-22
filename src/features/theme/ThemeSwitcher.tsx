@@ -16,8 +16,6 @@ export function ThemeSwitcher() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  console.log({ theme });
-
   return (
     <div className="flex justify-end">
       <Button

@@ -5,11 +5,11 @@ import { Card } from "../../../components";
 import { useDragAndDrop } from "./hooks/useDragAndDrop";
 
 import { Dispatch, SetStateAction } from "react";
-import { ToDoItem } from "../types";
+import { ItemsInTaskColumn } from "../types";
 
 type Props = {
-  items: Record<string, Array<ToDoItem>>;
-  setItems: Dispatch<SetStateAction<Record<string, ToDoItem[]>>>;
+  items: ItemsInTaskColumn;
+  setItems: Dispatch<SetStateAction<ItemsInTaskColumn>>;
   handleDeleteTodo: (id: string) => void;
 };
 export function DragAndDropBoard({ items, setItems, handleDeleteTodo }: Props) {

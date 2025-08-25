@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { ItemsInTaskColumn, ToDoItem } from "../types";
-import { updateItemsToLocalStorage } from "../utils";
+import { updateItemsInLocalStorage } from "../utils";
 
 type Props = {
   items: ItemsInTaskColumn;
@@ -20,7 +20,7 @@ export function useTodo({ items, setItems }: Props) {
       toDo: [...items["toDo"], newTodo],
     };
     setItems(updatedItems);
-    updateItemsToLocalStorage(updatedItems);
+    updateItemsInLocalStorage(updatedItems);
   };
 
   const handleDeleteTodo = (id: string) => {
@@ -36,7 +36,7 @@ export function useTodo({ items, setItems }: Props) {
       } as ItemsInTaskColumn
     );
     setItems(filteredItems);
-    updateItemsToLocalStorage(filteredItems);
+    updateItemsInLocalStorage(filteredItems);
   };
 
   return {

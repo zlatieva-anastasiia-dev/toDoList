@@ -1,4 +1,4 @@
 import { ItemsInTaskColumn } from "./types";
 
-export const updateItemsToLocalStorage = (items: ItemsInTaskColumn) =>
+export const updateItemsInLocalStorage = (items: ItemsInTaskColumn) =>
   localStorage.setItem("items", JSON.stringify(items));

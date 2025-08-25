@@ -13,7 +13,7 @@ import {
 import { SetStateAction, useState, Dispatch } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { ItemsInTaskColumn, ToDoItem } from "../../types";
-import { updateItemsToLocalStorage } from "../../utils";
+import { updateItemsInLocalStorage } from "../../utils";
 
 type Props = {
   items: ItemsInTaskColumn;
@@ -65,7 +65,7 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
             overIndex
           ),
         };
-        updateItemsToLocalStorage(updatedItems);
+        updateItemsInLocalStorage(updatedItems);
         return updatedItems;
       });
     } else if (activeContainer !== overContainer) {
@@ -81,7 +81,7 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
             activeItem
           ),
         };
-        updateItemsToLocalStorage(updatedItems);
+        updateItemsInLocalStorage(updatedItems);
         return updatedItems;
       });
     }
@@ -122,7 +122,7 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
             activeItem
           ),
         };
-        updateItemsToLocalStorage(updatedItems);
+        updateItemsInLocalStorage(updatedItems);
         return updatedItems;
       });
     }

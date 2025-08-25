@@ -6,13 +6,14 @@ import { useTodo } from "./hooks/useTodo";
 
 export function ToDoContent() {
   const [items, setItems] = useState<ItemsInTaskColumn>(() => {
-    return (
-      JSON.parse(localStorage.getItem("items") || "{}") || {
-        toDo: [],
-        inProgress: [],
-        done: [],
-      }
-    );
+    const persistedItems = localStorage.getItem("items");
+    return persistedItems
+      ? JSON.parse(persistedItems)
+      : {
+          toDo: [],
+          inProgress: [],
+          done: [],
+        };
   });
 
   const { handleAddTodo, handleDeleteTodo } = useTodo({ items, setItems });

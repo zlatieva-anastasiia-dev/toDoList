@@ -12,11 +12,12 @@ import {
 
 import { SetStateAction, useState, Dispatch } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
-import { ToDoItem } from "../../types";
+import { ItemsInTaskColumn, ToDoItem } from "../../types";
+import { updateItemsToLocalStorage } from "../../utils";
 
 type Props = {
-  items: Record<string, Array<ToDoItem>>;
-  setItems: Dispatch<SetStateAction<Record<string, ToDoItem[]>>>;
+  items: ItemsInTaskColumn;
+  setItems: Dispatch<SetStateAction<ItemsInTaskColumn>>;
 };
 
 export const useDragAndDrop = ({ items, setItems }: Props) => {
@@ -56,7 +57,7 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
 
     if (activeContainer === overContainer) {
       setItems((prev) => {
-        return {
+        const updatedItems = {
           ...prev,
           [activeContainer]: arrayMove(
             prev[activeContainer],
@@ -64,10 +65,12 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
             overIndex
           ),
         };
+        updateItemsToLocalStorage(updatedItems);
+        return updatedItems;
       });
     } else if (activeContainer !== overContainer) {
       setItems((prev) => {
-        return {
+        const updatedItems = {
           ...prev,
           [activeContainer]: prev[activeContainer].filter(
             (item) => item.id !== active.id
@@ -78,6 +81,8 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
             activeItem
           ),
         };
+        updateItemsToLocalStorage(updatedItems);
+        return updatedItems;
       });
     }
     setActiveItem(undefined);
@@ -106,7 +111,7 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
 
     if (activeContainer !== overContainer) {
       setItems((prev) => {
-        return {
+        const updatedItems = {
           ...prev,
           [activeContainer]: prev[activeContainer].filter(
             (item) => item.id !== active.id
@@ -117,6 +122,8 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
             activeItem
           ),
         };
+        updateItemsToLocalStorage(updatedItems);
+        return updatedItems;
       });
     }
   };

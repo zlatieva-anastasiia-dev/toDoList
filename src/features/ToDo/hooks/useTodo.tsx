@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { ToDoItem } from "../types";
+import { ItemsInTaskColumn, ToDoItem } from "../types";
+import { updateItemsToLocalStorage } from "../utils";
 
 type Props = {
-  items: Record<string, Array<ToDoItem>>;
-  setItems: Dispatch<SetStateAction<Record<string, ToDoItem[]>>>;
+  items: ItemsInTaskColumn;
+  setItems: Dispatch<SetStateAction<ItemsInTaskColumn>>;
 };
 export function useTodo({ items, setItems }: Props) {
   const handleAddTodo = (newTask: string) => {
@@ -14,23 +15,28 @@ export function useTodo({ items, setItems }: Props) {
       id: crypto.randomUUID(),
       name: newTask,
     };
-    setItems((prev: Record<string, ToDoItem[]>) => {
-      return { ...prev, toDo: [...prev["toDo"], newTodo] } as Record<
-        string,
-        ToDoItem[]
-      >;
-    });
+    const updatedItems = {
+      ...items,
+      toDo: [...items["toDo"], newTodo],
+    };
+    setItems(updatedItems);
+    updateItemsToLocalStorage(updatedItems);
   };
 
   const handleDeleteTodo = (id: string) => {
     const filteredItems = Object.keys(items).reduce(
-      (acc: Record<string, Array<ToDoItem>>, key: string) => {
+      (acc: ItemsInTaskColumn, key) => {
         acc[key] = items[key].filter((item) => item.id !== id);
         return acc;
       },
-      {}
+      {
+        toDo: [],
+        inProgress: [],
+        done: [],
+      } as ItemsInTaskColumn
     );
     setItems(filteredItems);
+    updateItemsToLocalStorage(filteredItems);
   };
 
   return {

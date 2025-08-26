@@ -3,7 +3,6 @@ import {
   DragStartEvent,
   KeyboardSensor,
   UniqueIdentifier,
-  TouchSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -25,8 +24,7 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor),
-    useSensor(TouchSensor)
+    useSensor(KeyboardSensor)
   );
 
   const findContainerByItemId = (id: UniqueIdentifier) => {

@@ -133,7 +133,10 @@ export const useDragAndDrop = ({ items, setItems }: Props) => {
       .flat()
       .find((item) => item.id === active.id);
 
-    activeItem && setActiveItem(activeItem);
+      if(activeItem){
+        setActiveItem(activeItem);
+      }
+
   };
 
   return {

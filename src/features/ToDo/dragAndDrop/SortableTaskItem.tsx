@@ -36,6 +36,9 @@ export function SortableTaskItem({ id, children, handleDelete }: Props) {
           onPointerDown={(e) => {
             e.stopPropagation();
           }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+          }}
           onClick={handleDelete}
         >
           <TrashIcon className="w-5 h-5" />
